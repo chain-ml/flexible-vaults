@@ -384,10 +384,11 @@ contract GenerateEnterExitJSON is Script {
 
             // 2. requestWithdrawalsWstETH(uint256[] amounts, address _owner) - owner locked to subvault
             // Signature: requestWithdrawalsWstETH(uint256[],address) returns (uint256[])
-            uint256[] memory emptyAmounts = new uint256[](0);
+            // Using array of length 1 - bitmask length must match actual calldata length
+            uint256[] memory singleAmount = new uint256[](1);
             bytes memory requestCalldata = abi.encodeWithSignature(
                 "requestWithdrawalsWstETH(uint256[],address)",
-                emptyAmounts,
+                singleAmount,
                 config.subvault
             );
 
@@ -404,7 +405,7 @@ contract GenerateEnterExitJSON is Script {
                     false, // selector: fixed
                     abi.encodeWithSignature(
                         "requestWithdrawalsWstETH(uint256[],address)",
-                        emptyAmounts, // amounts: any (dynamic array)
+                        singleAmount, // amounts: any (1 element array)
                         config.subvault // _owner: FIXED to subvault
                     )
                 )
